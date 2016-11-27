@@ -8,8 +8,7 @@ import { check } from 'meteor/check'
 
 import 'nya-bootstrap-select'
 
-
-//css file for angular-notifu imported in client/main.css befor bootstrap.css in order to work classes option
+//css file for angular-notifu imported in client/main.css befor bootstrap.css in order to work classes options
 import '/public/CDN/angular-notify/js/angular-notify.min.js'
 
 
