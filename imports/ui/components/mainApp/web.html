@@ -299,7 +299,9 @@
                                                 <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                                             </button>
 											<button type="button" class="btn btn-danger" ng-click="mainApp.settingsPanel.formation.delete(formation._id)">
-                                                <i class="fa fa-trash-o" aria-hidden="true"></i>
+                                                <i class="fa fa-trash-o" aria-hidden="true" ng-if="mainApp.settingsPanel.formation.deleteId!=formation._id"></i>
+										    	<i ng-if="mainApp.settingsPanel.formation.deleteId==formation._id&&mainApp.settingsPanel.formation.deleteTimer>0">{{mainApp.settingsPanel.formation.deleteTimer}}</i>
+
                                             </button>
 										</div>
 									</div>
@@ -434,8 +436,9 @@
                                                 <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                                             </button>
 											<button type="button" class="btn btn-danger" ng-click="mainApp.settingsPanel.matiere.delete(matiere._id)">
-                                                <i class="fa fa-trash-o" aria-hidden="true"></i>
-                                            </button>
+                                                <i class="fa fa-trash-o" aria-hidden="true" ng-if="mainApp.settingsPanel.matiere.deleteId!=matiere._id"></i>
+												<i ng-if="mainApp.settingsPanel.matiere.deleteId==matiere._id&&mainApp.settingsPanel.matiere.deleteTimer>0">{{mainApp.settingsPanel.matiere.deleteTimer}}</i>
+											</button>
 										</div>
 									</div>
 									<!--Fin affichage des matieres -->
@@ -623,8 +626,9 @@
 											<button type="button" class="btn btn-primary" ng-click="mainApp.settingsPanel.prof.edite(prof)">
                                                 <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                                             </button>
-											<button type="button" class="btn btn-danger" ng-click="mainApp.settingsPanel.prof.delete(prof)">
-                                                <i class="fa fa-trash-o" aria-hidden="true"></i>
+											<button type="button" class="btn btn-danger" ng-click="mainApp.settingsPanel.prof.delete(prof._id)">
+                                                <i class="fa fa-trash-o" aria-hidden="true" ng-if="mainApp.settingsPanel.prof.deleteId!=prof._id"></i>
+												<i ng-if="mainApp.settingsPanel.prof.deleteId==prof._id&&mainApp.settingsPanel.prof.deleteTimer>0">{{mainApp.settingsPanel.prof.deleteTimer}}</i>
                                             </button>
 										</div>
 									</div>
@@ -813,7 +817,8 @@
                                                 <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                                             </button>
 											<button type="button" class="btn btn-danger" ng-click="mainApp.settingsPanel.etudiant.delete(etudiant._id)">
-                                                <i class="fa fa-trash-o" aria-hidden="true"></i>
+                                                <i class="fa fa-trash-o" aria-hidden="true" ng-if="mainApp.settingsPanel.etudiant.deleteId!=etudiant._id"></i>
+											    <i ng-if="mainApp.settingsPanel.etudiant.deleteId==etudiant._id&&mainApp.settingsPanel.etudiant.deleteTimer>0">{{mainApp.settingsPanel.etudiant.deleteTimer}}</i>
                                             </button>
 										</div>
 									</div>

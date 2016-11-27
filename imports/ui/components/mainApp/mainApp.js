@@ -28,7 +28,7 @@ import { name as filterNotes } from '../../filters/filterNotes';
 
 
 class Settings {
-    constructor($scope, $reactive, $timeout, notify, orderMatieresFilter, $state) {
+    constructor($scope, $reactive, $timeout, $interval, notify, orderMatieresFilter, $state) {
         'ngInject';
 
         $reactive(this).attach($scope);
@@ -346,8 +346,15 @@ class Settings {
                 headerFields: ['intitulee'],
                 searchQuery: '',
 
+                deleteTimer: 4,
+                intervalTimer: undefined,
+                deleteId: undefined,
+
                 reset: function () {
                     this.intitulee = '';
+                    this.deleteTimer = 4;
+                    this.deleteId = undefined;
+                    $interval.cancel(this.intervalTimer);
                 },
 
                 add: function () {
@@ -388,10 +395,31 @@ class Settings {
                 },
 
                 delete: function (id) {
-                    Formations.remove({ _id: id });
-                },
-                submitDelete: function (formation) {
+                    if (this.deleteId == id) {
+                        this.submitDelete(id);
+                        this.reset();
+                    } else {
+                        notify({ message: 'veuillez confirmer !!cliquer a nouveau', position: 'right', duration: 3000, classes: 'alert-warrning' });
+                        this.reset();
+                        this.deleteId = id;
+                        this.intervalTimer = $interval(() => {
+                            this.deleteTimer--;
+                            if (this.deleteTimer == 0) {
+                                this.reset();
+                            }
+                        }, 1000);
+                    }
 
+                },
+                submitDelete: function (id) {
+                    Formations.remove({ _id: id },
+                        (err, id) => {
+                            if (err) {
+                                notify({ message: 'une erreur est survenue!', position: 'left', duration: 4000, classes: 'alert-danger' });
+                            } else {
+                                notify({ message: 'Formation Supprimer avec success', position: 'right', duration: 4000, classes: 'alert-success' });
+                            }
+                        });
                 },
                 cancelDelete: function (formation) {
 
@@ -406,10 +434,17 @@ class Settings {
                 headerFields: ['intitulee', 'formation', 'semestre'],
                 searchQuery: '',
 
+                deleteTimer: 4,
+                intervalTimer: undefined,
+                deleteId: undefined,
+
                 reset: function () {
                     this.intitulee = undefined;
                     this.formationId = undefined;
                     this.semestre = undefined;
+                    this.deleteId = undefined;
+                    $interval.cancel(this.intervalTimer);
+                    this.deleteTimer = 4;
                 },
 
                 add: function () {
@@ -622,16 +657,30 @@ class Settings {
                 },
 
                 delete: function (id) {
+                    if (this.deleteId == id) {
+                        this.submitDelete(id);
+                        this.reset();
+                    } else {
+                        notify({ message: 'veuillez confirmer !!cliquer a nouveau', position: 'right', duration: 3000, classes: 'alert-warrning' });
+                        this.reset();
+                        this.deleteId = id;
+                        this.intervalTimer = $interval(() => {
+                            this.deleteTimer--;
+                            if (this.deleteTimer == 0) {
+                                this.reset();
+                            }
+                        }, 1000);
+                    }
+                },
+                submitDelete: function (id) {
                     var WriteResult = Matieres.remove({ _id: id });
                     if (WriteResult) {
                         Meteor.call('removeNotes', { matieresId: id });
                         Meteor.call('updateProfs', { matieresId: id }, { $pull: { matieresId: id } }, { multi: true })
+                        notify({ message: 'Matiere Supprimer avec success', position: 'right', duration: 4000, classes: 'alert-success' });
                     } else {
-                        console.log("Could not remove Matiere : " + id)
+                        notify({ message: 'une erreur est survenue!', position: 'left', duration: 4000, classes: 'alert-danger' });
                     }
-                },
-                submitDelete: function (matiere) {
-
                 },
                 cancelDelete: function (matiere) {
 
@@ -647,11 +696,18 @@ class Settings {
                 headerFields: ['nom', 'prenom', 'grade'],
                 searchQuery: '',
 
+                deleteTimer: 4,
+                intervalTimer: undefined,
+                deleteId: undefined,
+
                 reset: function () {
                     this.nom = '';
                     this.prenom = '';
                     this.grade = '';
                     this.matieresId = '';
+                    this.deleteTimer = 4;
+                    this.deleteId = undefined;
+                    $interval.cancel(this.intervalTimer);
                 },
 
                 add: function () {
@@ -852,19 +908,33 @@ class Settings {
                     this.mode = false;
                 },
 
-                delete: function (prof) {
-                    Profs.remove({ _id: prof._id },
+                delete: function (id) {
+                    if (this.deleteId == id) {
+                        this.submitDelete(id);
+                        this.reset();
+                    } else {
+                        notify({ message: 'veuillez confirmer !!cliquer a nouveau', position: 'right', duration: 3000, classes: 'alert-warrning' });
+                        this.reset();
+                        this.deleteId = id;
+                        this.intervalTimer = $interval(() => {
+                            this.deleteTimer--;
+                            if (this.deleteTimer == 0) {
+                                this.reset();
+                            }
+                        }, 1000);
+                    }
+
+                },
+                submitDelete: function (id) {
+                    Profs.remove({ _id: id },
                         (err, id) => {
                             if (err) {
                                 notify({ message: 'une erreur est survenue!', position: 'left', duration: 4000, classes: 'alert-danger' });
                             } else {
-                                Meteor.call('removeUser', { "profile._id": prof._id });
+                                Meteor.call('removeUser', { "profile._id": id });
                                 notify({ message: 'Prof Supprimer avec success', position: 'right', duration: 4000, classes: 'alert-success' });
                             }
                         });
-                },
-                submitDelete: function (prof) {
-
                 },
                 cancelDelete: function (prof) {
 
@@ -881,12 +951,19 @@ class Settings {
                 headerFields: ['nom', 'prenom', 'cin', 'cne', 'formation'],
                 searchQuery: '',
 
+                deleteTimer: 4,
+                intervalTimer: undefined,
+                deleteId: undefined,
+
                 reset: function () {
                     this.nom = '';
                     this.prenom = '';
                     this.cin = '';
                     this.cne = '';
                     this.formationId = '';
+                    this.deleteTimer = 4;
+                    this.deleteId = undefined;
+                    $interval.cancel(this.intervalTimer);
                 },
 
                 add: function () {
@@ -1121,6 +1198,23 @@ class Settings {
                 },
 
                 delete: function (id) {
+                    if (this.deleteId == id) {
+                        this.submitDelete(id);
+                        this.reset();
+                    } else {
+                        notify({ message: 'veuillez confirmer !!cliquer a nouveau', position: 'right', duration: 3000, classes: 'alert-warrning' });
+                        this.reset();
+                        this.deleteId = id;
+                        this.intervalTimer = $interval(() => {
+                            this.deleteTimer--;
+                            if (this.deleteTimer == 0) {
+                                this.reset();
+                            }
+                        }, 1000);
+                    }
+
+                },
+                submitDelete: function (id) {
                     Etudiants.remove({ _id: id },
                         (err, nbrRemoved) => {
                             if (err) {
@@ -1130,9 +1224,6 @@ class Settings {
                                 Meteor.call('removeNotes', { etudiantId: id });
                             }
                         });
-                },
-                submitDelete: function (etudiant) {
-
                 },
                 cancelDelete: function (etudiant) {
 
