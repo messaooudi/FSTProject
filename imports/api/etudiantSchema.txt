@@ -1,0 +1,28 @@
+nom : String
+prenom : String
+dateNaissance : String dd/mm/yyyy
+CIN : String
+CNE : String
+
+changeBit : 0|1
+parcoursScolaire : 
+    [
+        {
+            annee : String,
+            formation : String //ex : baccalaureat
+            etablissement : String
+            note : String
+        }
+    ] 
+formationActuelle : {
+            _id : @id,
+            intitulee : String
+}
+semestres : [
+    {
+        intitulee : String /S1...
+        formation : @id,
+        status : String /'en cour','valider','non valider'
+        note : String,
+    }
+]

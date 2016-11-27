@@ -1,0 +1,215 @@
+<!-- 
+        appShadow : {
+        _show : boolean,
+        show : function,
+        hide : function,
+        click : function
+        }
+ -->
+<div id="app-shadow" ng-if="mainApp.appShadow._show" ng-click="mainApp.appShadow.click()"></div>
+
+
+
+
+<!-- 
+    sideBarTrigger = {
+        _show : boolean
+        click : function, 
+        show : function,
+        hide : function,
+    }
+-->
+<div id="side-bar-trigger" ng-if="mainApp.sideBarTrigger._show">
+    <button type="button" class="btn btn-primary" ng-click="mainApp.sideBarTrigger.click()">
+        <i class="fa fa-bars" aria-hidden="true"></i>
+    </button>
+</div>
+
+
+
+<!-- 
+    sideBarPanel = {
+        _show : boolean,
+        toggle : function, 
+        show : function,
+        hide : function,
+        logOutTrigger : function,
+    }
+-->
+<div id="side-bar-panel" ng-if="mainApp.sideBarPanel._show">
+    <nav class="navbar navbar-inverse" id="sidebar-wrapper" role="navigation">
+        <ul class="nav sidebar-nav">
+            <li class="sidebar-brand">
+                <a>
+                    <h5>Header Title</h5>
+                </a>
+            </li>
+            <li>
+                <a class="sideBarItem" ng-click="mainApp.sideBarPanel.settingsTrigger()">Settings &nbsp <i class="fa fa-cogs" aria-hidden="true"></i></a>
+            </li>
+            <li>
+                <a class="sideBarItem" ng-click="mainApp.sideBarPanel.logOutTrigger()">Logout &nbsp <i class="fa fa-sign-out" aria-hidden="true"></i></a>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+
+
+<!-- 
+    settingsPanel = {
+        _show : boolean,      
+        toggle : function, 
+        show : function,
+        hide : function,
+    }
+-->
+<div id="settings-panel" ng-show="mainApp.settingsPanel._show">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <a href="#" class="btn btn-primary" ng-click="mainApp.settingsPanel.hide()">
+                <i class="fa fa-chevron-circle-left fa-lg" aria-hidden="true"></i>
+            </a>
+        </div>
+        <div class="panel-body">
+            <div class="panel-group" id="setting-body">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#setting-body" href="#setting-body-panel1">
+                                Formations
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="setting-body-panel1" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <p>test</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#setting-body" href="#setting-body-panel2">
+                                Matieres
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="setting-body-panel2" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <p>test</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<!--
+    etudiantsInfoPanel = {
+        _show : boolean,
+        search : {
+            value : String
+        }
+        show : function,
+        hide : function,
+    }
+-->
+<div id="etudians-info-panel" ng-if="mainApp.etudiantsInfoPanel._show">
+    <div class="panel panel-default">
+        <div class="panel-heading clearfix">
+            <div class="input-group col-xs-8">
+                <div class="input-group-btn">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                        <span class="fa fa-sort"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                        <li>
+                            <a href="#" ng-click="">Licence 1</a>
+                            <a href="#" ng-click="">Licence 2</a>
+                            <a href="#" ng-click="">Master 1</a>
+                            <a href="#" ng-click="">Master 2</a>
+                        </li>
+                    </ul>
+                </div>
+                <input type="text" class="form-control" placeholder="Recherche..." ng-model="mainApp.etudiantsInfoPanel.search.value">
+            </div>
+        </div>
+        <div class="panel-body">
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <div class="panel panel-default" ng-repeat="etudiant in mainApp.etudiants |  filter : mainApp.etudiantsInfoPanel.search.value">
+                        <div class="panel-heading clearfix">
+                            <div>
+                                <h3>{{etudiant.nom | uppercase}} {{etudiant.prenom}}</h3>
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            <p class="list-group-item-text">
+                                CNE : {{etudiant.CNE}}
+                                </br>
+                                CIN : {{etudiant.CIN}}
+                                </br>
+                                Filiere : {{etudiant.filiere}}
+                                </br>
+                                niveau : {{etudiant.semestre}}
+                                </br>
+                            </p>
+                            <hr>
+                            <div>
+                                <div class="container">
+                                    <div class="panel-group" id="accordion{{$index}}">
+                                        <div class="panel panel-info">
+                                            <div class="panel-heading">
+                                                <h4 class="panel-title">
+                                                <a data-toggle="collapse" data-parent="#accordion{{$index}}" href="#collapse{{$index}}1">Parcoure scolaire</a>
+                                                </h4>
+                                            </div>
+                                            <div id="collapse{{$index}}1" class="panel-collapse collapse">
+                                                <div class="panel-body" style="text-align : left">
+                                                    <div ng-repeat="anneeScolaire in etudiant.parcoursScolaire">
+                                                        <dl class="row" style="margin : 5px;">
+                                                            <dt>{{anneeScolaire.annee}} : </dt>
+                                                            <p>
+                                                                <dd>&nbsp formation : {{anneeScolaire.formation}}</dd>
+                                                                <dd>&nbsp établissement : {{anneeScolaire.etablissement}}</dd>
+                                                                <dd>&nbsp Note : {{anneeScolaire.note}}</dd>
+                                                            </p>
+                                                        </dl>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="panel panel-info">
+                                            <div class="panel-heading">
+                                                <h4 class="panel-title">
+                                                <a data-toggle="collapse" data-parent="#accordion{{$index}}" href="#collapse{{$index}}2">
+                                                    Formation actuelle
+                                                    </br>
+                                                    {{etudiant.formationActuelle.intitulee}}
+                                                </a>
+                                                </h4>
+                                            </div>
+                                            <div id="collapse{{$index}}2" class="panel-collapse collapse">
+                                                <div class="panel-body">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-footer clearfix">
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="panel-footer">
+        </div>
+    </div>
+</div>

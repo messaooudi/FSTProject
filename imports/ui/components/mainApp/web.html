@@ -1,0 +1,1184 @@
+<!-- 
+        appShadow : {
+        _show : boolean,
+        show : function,
+        hide : function,
+        click : function
+        }
+ -->
+<div id="app-shadow" ng-if="mainApp.appShadow._show" ng-click="mainApp.appShadow.click()"></div>
+
+
+
+
+<!-- 
+    appHeader = {
+        searchQuery : String,
+        backToHome  :function,
+    }
+ -->
+
+
+
+<!-- 
+    sideBarTrigger = {
+        _show : boolean
+        click : function, 
+        show : function,
+        hide : function,
+    }
+-->
+
+
+
+<div id="app-header">
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="col-xs-2" ng-if="mainApp.sideBarTrigger._show">
+				<button type="button" class="btn btn-primary" ng-click="mainApp.sideBarTrigger.click()">
+                    <i class="fa fa-bars" aria-hidden="true"></i>
+                </button>
+			</div>
+			<div class="col-xs-8">
+				<div class="input-group">
+					<span class="input-group-addon"><i class="fa fa-users" aria-hidden="true"></i></span>
+					<input type="text" class="form-control" placeholder="Rechercher des etudiants..." ng-model="mainApp.appHeader.searchQuery"
+						ng-click="mainApp.appHeader.searchInputActive()">
+				</div>
+			</div>
+			<div class="col-xs-2">
+				<button type="button" class="btn btn-primary" ng-click="mainApp.appHeader.backToHome()">
+                    <i class="fa fa-home" aria-hidden="true"></i>
+                </button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+<!--
+   etudiantList,
+    _show : boolean,      
+    show : function,
+    hide : function,
+-->
+
+<div id="etudiant-list-container" ng-show="mainApp.etudiantList._show">
+	<div class="panel panel-default clearfix">
+		<div class="panel-body">
+			<ul class="list-group">
+				<!-- iteration sur les etudiants -->
+				<li class="list-group-item" ng-repeat="etudiant in mainApp.etudiants | filter : mainApp.appHeader.searchQuery">
+					<div class="row">
+						<div class="col-xs-12">
+
+							<!-- affichage des etudiants -->
+							<div ng-if="mainApp.settingsPanel.etudiant.mode != etudiant._id">
+								<div>
+									{{etudiant.nom | uppercase}} {{etudiant.prenom}}
+									</br>
+									<small class="text-muted">cin : {{etudiant.cin}}</small>
+									</br>
+									<small class="text-muted">cne : {{etudiant.cne}}</small>
+									</br>
+									<small class="text-muted">Formation : {{etudiant.formation.intitulee}}</small>
+								</div>
+
+								</br>
+
+								<div class="well well-sm">
+									<a href="#{{etudiant._id}}" data-toggle="collapse">NOTES</a>
+									<div id="{{etudiant._id}}" class="collapse">
+										<hr>
+										<div>
+											<div class="row" ng-repeat="note in mainApp.notes | filterNotes : etudiant._id">
+												<p class="col-xs-2">{{note.matiere.semestre}}</p>
+												<p class="col-xs-6"><strong>{{note.matiere.intitulee}}</strong></p>
+												<p class="col-xs-2">{{note.valeur}}</p>
+												<p class="col-xs-2">{{note.valeur == '-'?'-':note.valeur>=10?'V':'NV'}}</p>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!-- buttons de modification/suppression d'un etudiant' -->
+							</div>
+							<!-- Fin affichage des etudiants -->
+						</div>
+					</div>
+				</li>
+				<!--Fin iteration sur les etudiants -->
+			</ul>
+		</div>
+	</div>
+</div>
+
+<!-- 
+    settingsPanel = {
+        _show : boolean,      
+        show : function,
+        hide : function,
+        formation : {
+            mode : boolean
+            intitulee : String
+            reset : function
+            
+            fieldsHeader : [],
+            searchQuery : String,
+            
+            add :function
+            submitAdd : function
+            cancelAdd: function
+            
+            edite : function
+            submitEdite : function
+            cancelEdite : function
+            
+            delete : function
+            submitDelete : function
+            cancelDelete : function
+            
+            
+        },
+        matiere : {
+            mode : boolean
+            intitulee : String
+            formationId : String
+            semestre : String
+            reset : function
+            
+            fieldsHeader : [],
+            searchQuery : String,
+            
+            add :function
+            submitAdd : function
+            cancelAdd: function
+            
+            edite : function
+            submitEdite : function
+            cancelEdite : function
+            
+            delete : function
+            submitDelete : function
+            cancelDelete : function
+        },
+        prof : {
+            mode : boolean
+            nom : String
+            prenom : String
+            grade : String
+            matieresId : []
+            
+            fieldsHeader : [],
+            searchQuery : String,
+            
+            add :function
+            submitAdd : function
+            cancelAdd: function
+            
+            edite : function
+            submitEdite : function
+            cancelEdite : function
+            
+            delete : function
+            submitDelete : function
+            cancelDelete : function
+        },
+        etudiant : {
+            mode : boolean
+            nom : String
+            prenom : String
+            cin : String
+            cne : String
+           
+            fieldsHeader : [],
+            searchQuery : String,
+           
+            add :function
+            addFromCSV : function
+            submitAddCSV : function
+            submitAdd : function
+            cancelAdd: function
+            
+            edite : function
+            submitEdite : function
+            cancelEdite : function
+            
+            delete : function
+            submitDelete : function
+            cancelDelete : function
+        },
+        note : {
+            mode : boolean
+            valeur : String
+            etudiantId : String
+            matiereId : String
+            profId : String
+            semestre : String
+
+            searchQuery : String,
+           
+            add :function
+            addFromCSV : function
+            submitAddCSV : function
+            submitAdd : function
+            cancelAdd: function
+        }
+
+    }
+-->
+
+
+<div id="homeContainer" ng-show="mainApp.settingsPanel._show">
+	<div class="panel-group" id="setting-body">
+		<!-- formation panel -->
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<form>
+					<div class="input-group">
+						<span class="input-group-addon" data-toggle="collapse" data-parent="#setting-body" href="#setting-body-panel1">
+                                    <a>Formations</a>
+                                </span>
+						<input type="text" class="form-control" ng-model="mainApp.settingsPanel.formation.searcQuery" placeholder="Rechercher une formation ...">
+					</div>
+				</form>
+			</div>
+			<div id="setting-body-panel1" class="panel-collapse collapse">
+				<div class="panel-body">
+					<ul class="list-group">
+
+						<!-- ajouter une formation -->
+						<li class="list-group-item" ng-if="mainApp.currentProf.mask == '010'">
+							<div class="row">
+								<div class="col-xs-12" ng-if="mainApp.settingsPanel.formation.mode == 'add'">
+									<form name="addFormationForm">
+										<div class="form-group" ng-class="{'has-error' : addFormationForm.intitulee.$invalid && !addFormationForm.intitulee.$pristine}">
+											<labe for="addFormationIntitulee">Intitulée :</labe>
+											<input type="text" id="addFormationIntitulee" name="intitulee" class="form-control" ng-model="mainApp.settingsPanel.formation.intitulee"
+												required>
+											<div ng-show="!addFormationForm.intitulee.$pristine">
+												<p ng-show="addFormationForm.intitulee.$error.required" class="help-block">intitulee obligatoir.</p>
+											</div>
+										</div>
+										<!--buttons de  confirmation / annulation de l'ajout -->
+										<div class="col-xs-6 col-xs-push-3 form-group">
+											<hr>
+											<button type="button" class="btn btn-success" ng-disabled="addFormationForm.$invalid" ng-click="mainApp.settingsPanel.formation.submitAdd()">
+                                                <i class="fa fa-check-square-o" aria-hidden="true"></i>
+                                            </button>
+											<button type="button" class="btn btn-warning" ng-click="mainApp.settingsPanel.formation.cancelAdd()">
+                                                <i class="fa fa-times-circle-o" aria-hidden="true"></i>
+                                            </button>
+										</div>
+									</form>
+								</div>
+								<!--buttons d'afficahge du formulaire' d'ajout -->
+								<div class="col-xs-6 col-xs-push-3" ng-if="mainApp.settingsPanel.formation.mode != 'add'">
+									<button type="button" class="btn btn-info" ng-click="mainApp.settingsPanel.formation.add()">
+                                        <i class="fa fa-plus-square-o" aria-hidden="true"></i>
+                                    </button>
+								</div>
+							</div>
+						</li>
+						<!--fin ajouter une formation -->
+
+						<!-- iteration sur les formations -->
+						<li class="list-group-item" ng-repeat="formation in mainApp.formations | filter : mainApp.settingsPanel.formation.searcQuery">
+							<div class="row">
+
+								<div class="col-xs-12">
+									<!-- affichage des formations -->
+									<div ng-if="mainApp.settingsPanel.formation.mode != formation._id">
+										<div>
+											{{formation.intitulee}}
+										</div>
+										<!-- buttons de modification/suppression d'une formation' -->
+										<div class="col-xs-6 col-xs-push-3 form-group" ng-if="mainApp.currentProf.mask == '010'">
+											<hr>
+											<button type="button" class="btn btn-primary" ng-click="mainApp.settingsPanel.formation.edite(formation)">
+                                                <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                            </button>
+											<button type="button" class="btn btn-danger" ng-click="mainApp.settingsPanel.formation.delete(formation._id)">
+                                                <i class="fa fa-trash-o" aria-hidden="true"></i>
+                                            </button>
+										</div>
+									</div>
+									<!--Fin affichage des formations -->
+
+									<!-- modification d'une formation -->
+									<form name="changeFormationForm" ng-if="mainApp.settingsPanel.formation.mode == formation._id && mainApp.currentProf.mask == '010'">
+										<div class="form-group" ng-class="{'has-error' : changeFormationForm.intitulee.$invalid && !changeFormationForm.intitulee.$pristine}">
+											<label for="changeForamtionIntitulee">Intitulée :</label>
+											<input type="text" id="changeForamtionIntitulee" name="intitulee" class="form-control" ng-model="formation.intitulee" required>
+											<div ng-show="!changeFormationForm.intitulee.$pristine">
+												<p ng-show="changeFormationForm.intitulee.$error.required" class="help-block">intitulee obligatoir.</p>
+											</div>
+										</div>
+										<!--buttons de  confirmation / annulation de la modification -->
+										<div class="col-xs-6 col-xs-push-3 form-group">
+											<hr>
+											<button type="button" class="btn btn-success" ng-disabled="changeFormationForm.$invalid" ng-click="mainApp.settingsPanel.formation.submitEdite(formation)">
+                                                <i class="fa fa-check-square-o" aria-hidden="true"></i>
+                                            </button>
+											<button type="button" class="btn btn-warning" ng-click="mainApp.settingsPanel.formation.cancelEdite(formation)">
+                                                <i class="fa fa-times-circle-o" aria-hidden="true"></i>
+                                            </button>
+										</div>
+									</form>
+									<!--FIN modification d'une formation -->
+
+								</div>
+							</div>
+						</li>
+						<!--Fin iteration sur les formations -->
+
+					</ul>
+				</div>
+			</div>
+		</div>
+		<!-- fin formation panel -->
+
+		<!-- matiere panel -->
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<form>
+					<div class="input-group">
+						<span class="input-group-addon" data-toggle="collapse" data-parent="#setting-body" href="#setting-body-panel2">
+                                    <a>Matieres</a>
+                                </span>
+						<input type="text" class="form-control" ng-model="mainApp.settingsPanel.matiere.searcQuery" placeholder="Rechercher une matiere ...">
+					</div>
+				</form>
+			</div>
+			<div id="setting-body-panel2" class="panel-collapse collapse">
+				<div class="panel-body">
+					<ul class="list-group">
+
+						<!-- ajouter une matiere -->
+						<li class="list-group-item" ng-if="mainApp.currentProf.mask == '010'">
+							<div class="row">
+								<div class="col-xs-12" ng-if="mainApp.settingsPanel.matiere.mode == 'add'">
+									<form name="addMatiereForm">
+										<div class="form-group" ng-class="{'has-error' : addMatiereForm.intitulee.$invalid && !addMatiereForm.intitulee.$pristine}">
+											<labe for='addMatiereIntitulee'>Intitulée :</labe>
+											<input type="text" id='addMatiereIntitulee' name="intitulee" class="form-control" ng-model="mainApp.settingsPanel.matiere.intitulee"
+												required>
+											<div ng-show="!addMatiereForm.intitulee.$pristine">
+												<p ng-show="addMatiereForm.intitulee.$error.required" class="help-block">intitulee obligatoir.</p>
+											</div>
+										</div>
+										<div class="form-group" ng-class="{'has-error' : addMatiereForm.formation.$invalid && !addMatiereForm.formation.$pristine}">
+											<labe for="addMatiereFormation">Formation :</labe>
+											<select class="form-control" id="addMatiereFormation" name="formation" ng-model="mainApp.settingsPanel.matiere.formationId"
+												ng-options="formation._id as formation.intitulee for formation in mainApp.formations" required>
+                                            </select>
+											<div ng-show="!addMatiereForm.formation.$pristine">
+												<p ng-show="addMatiereForm.formation.$error.required" class="help-block">formation obligatoir.</p>
+											</div>
+										</div>
+										<div class="form-group" ng-class="{'has-error' : addMatiereForm.semestre.$invalid && !addMatiereForm.semestre.$pristine}">
+											<labe for="addMatiereSemestre">Semestre :</labe>
+											<select class="form-control" id="addMatiereSemestre" name="semestre" ng-model="mainApp.settingsPanel.matiere.semestre" required>
+                                                <option ng-repeat="semestre in ['S3','S4','S5','S6','S7','S8','S9','S10']">{{semestre}}</option>
+                                            </select>
+											<div ng-show="!addMatiereForm.semestre.$pristine">
+												<p ng-show="addMatiereForm.semestre.$error.required" class="help-block">semestre obligatoir.</p>
+											</div>
+										</div>
+										<!--buttons de  confirmation / annulation de l'ajout -->
+										<div class="col-xs-6 col-xs-push-3">
+											<hr>
+											<button type="button" class="btn btn-success" ng-disabled="addMatiereForm.$invalid" ng-click="mainApp.settingsPanel.matiere.submitAdd()">
+                                                <i class="fa fa-check-square-o" aria-hidden="true"></i>
+                                            </button>
+											<button type="button" class="btn btn-warning" ng-click="mainApp.settingsPanel.matiere.cancelAdd()">
+                                                <i class="fa fa-times-circle-o" aria-hidden="true"></i>
+                                            </button>
+										</div>
+									</form>
+								</div>
+								<!--buttons d'afficahge du formulaire' d'ajout -->
+								<div class="col-xs-6 col-xs-push-3" ng-if="mainApp.settingsPanel.matiere.mode != 'add'">
+									<div id="uploadMatieresContainer"></div>
+									<button type="button" class="btn btn-info" ng-click="mainApp.settingsPanel.matiere.add()">
+                                        <i class="fa fa-plus-square-o" aria-hidden="true"></i>
+                                    </button>
+									<div class="btn-group" role="group">
+										<button type="button" class="btn btn-primary" ng-click="mainApp.settingsPanel.matiere.addFromCSV()">
+                                            <i class="fa fa-list-alt" aria-hidden="true"></i>
+                                        </button>
+									</div>
+								</div>
+							</div>
+						</li>
+						<!--fin ajouter une matiere -->
+
+						<!-- iteration sur les matieres -->
+						<li class="list-group-item" ng-repeat="matiere in mainApp.matieres | filter : mainApp.settingsPanel.matiere.searcQuery">
+							<div class="row">
+
+								<div class="col-xs-12">
+									<!-- affichage des matieres -->
+									<div ng-if="mainApp.settingsPanel.matiere.mode != matiere._id">
+										<div>
+											{{matiere.intitulee}}
+											</br>
+											<small class="text-muted">{{matiere.formation.intitulee}}</small>
+											</br>
+											<small class="text-muted">{{matiere.semestre}}</small>
+										</div>
+										<!-- buttons de modification/suppression d'un prof' -->
+										<div class="col-xs-6 col-xs-push-3" ng-if="mainApp.currentProf.mask == '010'">
+											<hr>
+											<button type="button" class="btn btn-primary" ng-click="mainApp.settingsPanel.matiere.edite(matiere)">
+                                                <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                            </button>
+											<button type="button" class="btn btn-danger" ng-click="mainApp.settingsPanel.matiere.delete(matiere._id)">
+                                                <i class="fa fa-trash-o" aria-hidden="true"></i>
+                                            </button>
+										</div>
+									</div>
+									<!--Fin affichage des matieres -->
+
+									<!-- modification d'une matiere -->
+									<form name="changeMatiereForm" ng-if="mainApp.settingsPanel.matiere.mode == matiere._id && mainApp.currentProf.mask == '010'">
+										<div class="form-group" ng-class="{'has-error' : changeMatiereForm.intitulee.$invalid && !changeMatiereForm.intitulee.$pristine}">
+											<label for="changeMatiereIntitulee">Intitulée :</label>
+											<input type="text" id="changeMatiereIntitulee" name="intitulee" class="form-control" ng-model="matiere.intitulee" placeholder="intitulée"
+												required>
+											<div ng-show="!changeMatiereForm.intitulee.$pristine">
+												<p ng-show="changeMatiereForm.intitulee.$error.required" class="help-block">intitulee obligatoir.</p>
+											</div>
+										</div>
+										<div class="form-group" ng-class="{'has-error' : changeMatiereForm.formation.$invalid && !changeMatiereForm.formation.$pristine}">
+											<label for="changeMatiereFormation">Formation :</label>
+											<select class="form-control" id="changeMatiereFormation" name="formation" ng-model="matiere.formationId" ng-options="formation._id as formation.intitulee for formation in mainApp.formations"
+												required>
+                                            </select>
+											<div ng-show="!changeMatiereForm.formation.$pristine">
+												<p ng-show="changeMatiereForm.formation.$error.required" class="help-block">formation obligatoir.</p>
+											</div>
+										</div>
+										<div class="form-group" ng-class="{'has-error' : changeMatiereForm.semestre.$invalid && !changeMatiereForm.semestre.$pristine}">
+											<label for="changeMatiereSemestre">Semestre :</label>
+											<select class="form-control" id="changeMatiereSemestre" name="semestre" ng-model="matiere.semestre" required>
+                                                <option ng-repeat="semestre in ['S3','S4','S5','S6','S7','S8','S9','S10']">{{semestre}}</option>
+                                            </select>
+											<div ng-show="!changeMatiereForm.semestre.$pristine">
+												<p ng-show="changeMatiereForm.semestre.$error.required" class="help-block">semestre obligatoir.</p>
+											</div>
+										</div>
+										<!--buttons de  confirmation / annulation de la modification -->
+										<div class="col-xs-6 col-xs-push-3 form-group">
+											<hr>
+											<button type="button" class="btn btn-success" ng-click="mainApp.settingsPanel.matiere.submitEdite(matiere)" ng-disabled="changeMatiereForm.$invalid">
+                                                <i class="fa fa-check-square-o" aria-hidden="true"></i>
+                                            </button>
+											<button type="button" class="btn btn-warning" ng-click="mainApp.settingsPanel.matiere.cancelEdite(matiere)">
+                                                <i class="fa fa-times-circle-o" aria-hidden="true"></i>
+                                            </button>
+										</div>
+									</form>
+									<!--FIN modification d'une matiere -->
+
+								</div>
+							</div>
+						</li>
+						<!-- FIN iteration sur les matieres -->
+
+					</ul>
+				</div>
+			</div>
+		</div>
+		<!-- fin matiere panel -->
+
+		<!--prof panel-->
+		<div class="panel panel-default clearfix">
+			<div class="panel-heading clearfix">
+				<form>
+					<div class="input-group">
+						<span class="input-group-addon" data-toggle="collapse" data-parent="#setting-body" href="#setting-body-panel3">
+                                    <a>Professeurs</a>
+                                </span>
+						<input type="text" class="form-control" ng-model="mainApp.settingsPanel.prof.searcQuery" placeholder="Rechercher un prof ...">
+					</div>
+				</form>
+			</div>
+			<div id="setting-body-panel3" class="panel-collapse collapse">
+				<div class="panel-body">
+					<ul class="list-group">
+
+						<!-- ajouter un prof -->
+						<li class="list-group-item" ng-if="mainApp.currentProf.mask == '010'">
+							<div class="row">
+								<div class="col-xs-12" ng-if="mainApp.settingsPanel.prof.mode == 'add'">
+									<form name="addProfForm">
+										<div class="form-group" ng-class="{'has-error' : addProfForm.nom.$invalid && !addProfForm.nom.$pristine}">
+											<label for="addProfNom">Nom : </label>
+											<input type="text" id="addProfNom" name="nom" class="form-control" ng-model="mainApp.settingsPanel.prof.nom" placeholder="Nom"
+												required>
+											<div ng-show="!addProfForm.nom.$pristine">
+												<p ng-show="addProfForm.nom.$error.required" class="help-block">nom obligatoir.</p>
+											</div>
+										</div>
+										<div class="form-group" ng-class="{'has-error' : addProfForm.prenom.$invalid && !addProfForm.prenom.$pristine}">
+											<label for="addProfPrenom">Prenom : </label>
+											<input type="text" id="addProfPrenom" name="prenom" class="form-control" ng-model="mainApp.settingsPanel.prof.prenom" placeholder="Prenom"
+												required>
+											<div ng-show="!addProfForm.prenom.$pristine">
+												<p ng-show="addProfForm.prenom.$error.required" class="help-block">prenom obligatoir.</p>
+											</div>
+										</div>
+										<div class="form-group">
+											<label for="addProfGrade">Grade : </label>
+											<input type="text" id="addProfGrade" class="form-control" ng-model="mainApp.settingsPanel.prof.grade" placeholder="Grade">
+										</div>
+										<div class="form-group">
+											<label for="addProfMatieres">Matieres enseigné :</label>
+											<ol class="nya-bs-select col-xs-12" title="..." ng-model="mainApp.settingsPanel.prof.matieresId" data-selected-text-format="count>3"
+												data-size="4" multiple>
+												<li>
+													<input type="text" class="form-control" ng-model="mainApp.searchInput" ng-init="mainApp.searchInput = ''" />
+												</li>
+												<li nya-bs-option="matiere in mainApp.matieres | filter:mainApp.searchInput" data-value="matiere._id">
+													<a>
+                                                                {{matiere.intitulee}}
+                                                                <span ng-if="mainApp.settingsPanel.prof.matieresId.includes(matiere._id)" class="glyphicon glyphicon-ok check-mark"></span> 
+                                                            </a>
+												</li>
+											</ol>
+										</div>
+										<!--buttons de  confirmation / annulation de l'ajout -->
+										<div class="col-xs-6 col-xs-push-3">
+											<hr>
+											<button type="button" class="btn btn-success" ng-click="mainApp.settingsPanel.prof.submitAdd(matiere)" ng-disabled="addProfForm.$invalid">
+                                                <i class="fa fa-check-square-o" aria-hidden="true"></i>
+                                            </button>
+											<button type="button" class="btn btn-warning" ng-click="mainApp.settingsPanel.prof.cancelAdd()">
+                                                <i class="fa fa-times-circle-o" aria-hidden="true"></i>
+                                            </button>
+										</div>
+									</form>
+								</div>
+								<!--buttons d'afficahge du formulaire' d'ajout -->
+								<div class="col-xs-6 col-xs-push-3" ng-if="mainApp.settingsPanel.prof.mode != 'add'">
+									<div id="uploadProfsContainer"></div>
+									<div class="btn-group" role="groupe">
+										<button type="button" class="btn btn-info" ng-click="mainApp.settingsPanel.prof.add()">
+                                            <i class="fa fa-plus-square-o" aria-hidden="true"></i>
+                                        </button>
+									</div>
+									<div class="btn-group" role="group">
+										<button type="button" class="btn btn-primary" ng-click="mainApp.settingsPanel.prof.addFromCSV()">
+                                            <i class="fa fa-list-alt" aria-hidden="true"></i>
+                                        </button>
+									</div>
+								</div>
+							</div>
+						</li>
+						<!--fin ajouter un prof -->
+
+
+						<!-- iteration sur les profs -->
+						<li class="list-group-item" ng-repeat="prof in mainApp.profs | filter : mainApp.settingsPanel.prof.searcQuery">
+							<div class="row">
+								<div class="col-xs-12">
+
+									<!-- affichage des profs -->
+									<div ng-if="mainApp.settingsPanel.prof.mode != prof._id">
+										<div>
+											{{prof.nom | uppercase}} {{prof.prenom}}
+											</br>
+											<div ng-if="prof.numero">
+												<small class="text-muted">{{prof.numero}}</small>
+												</br>
+											</div>
+											<div ng-if="prof.email">
+												<small class="text-muted">{{prof.email}}</small>
+												</br>
+											</div>
+											<small class="text-muted"> {{prof.grade}}</small>
+											</br>
+											<a href="#liste-matiere-{{$index}}" data-toggle="collapse">Matieres enseigné </a>
+											<div id="liste-matiere-{{$index}}" class="collapse">
+												<ul class="list-group">
+													<li class="list-group-item" ng-repeat="(id,formationLevel) in prof.matieres">
+														<div ng-repeat="(id,semestreLevel) in formationLevel">
+															<div ng-repeat="(id,matiere) in semestreLevel">
+																{{matiere.intitulee}}
+																</br>
+																<small class="text-muted">{{matiere.formation.intitulee}}</small>
+																</br>
+																<small class="text-muted">{{matiere.semestre}}</small>
+																<hr>
+															</div>
+														</div>
+													</li>
+												</ul>
+											</div>
+										</div>
+										<!-- buttons de modification/suppression d'un prof' -->
+										<div class="col-xs-6 col-xs-push-3" ng-if="mainApp.currentProf.mask == '010'">
+											<hr>
+											<button type="button" class="btn btn-primary" ng-click="mainApp.settingsPanel.prof.edite(prof)">
+                                                <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                            </button>
+											<button type="button" class="btn btn-danger" ng-click="mainApp.settingsPanel.prof.delete(prof)">
+                                                <i class="fa fa-trash-o" aria-hidden="true"></i>
+                                            </button>
+										</div>
+									</div>
+									<!--Fin affichage des profs -->
+
+									<!-- modification d'un prof  -->
+									<form name="changeProfForm" ng-if="mainApp.settingsPanel.prof.mode == prof._id && mainApp.currentProf.mask == '010'">
+										<div class="form-group" ng-class="{'has-error' : changeProfForm.nom.$invalid && !changeProfForm.nom.$pristine}">
+											<label for="changeProfNom">Nom : </label>
+											<input type="text" id="changeProfNom" name="nom" class="form-control" ng-model="prof.nom" placeholder="Nom" required>
+											<div ng-show="!changeProfForm.nom.$pristine">
+												<p ng-show="changeProfForm.nom.$error.required" class="help-block">nom obligatoir.</p>
+											</div>
+										</div>
+										<div class="form-group" ng-class="{'has-error' : changeProfForm.prenom.$invalid && !changeProfForm.prenom.$pristine}">
+											<label for="changeProfPrenom">Prenom : </label>
+											<input type="text" id="changeProfPrenom" name="prenom" class="form-control" ng-model="prof.prenom" placeholder="Prenom" required>
+											<div ng-show="!changeProfForm.prenom.$pristine">
+												<p ng-show="changeProfForm.prenom.$error.required" class="help-block">prenom obligatoir.</p>
+											</div>
+										</div>
+										<div class="form-group">
+											<label for="changeProfGrade">Grade : </label>
+											<input type="text" id="changeProfGrade" class="form-control" ng-model="prof.grade" placeholder="Grade">
+										</div>
+										<div class="form-group">
+											<label for="changeProfGrade">Matieres enseigné :</label>
+											<ol id="changeProfGrade" class="nya-bs-select col-xs-12" title="..." ng-model="prof.matieresId" data-selected-text-format="count>3"
+												data-size="4" multiple>
+												<li>
+													<input type="text" class="form-control" ng-model="mainApp.searchInput" ng-init="mainApp.searchInput = ''" />
+												</li>
+												<li nya-bs-option="matiere in mainApp.matieres | filter:mainApp.searchInput" data-value="matiere._id">
+													<a>
+                                                                {{matiere.intitulee}}
+                                                                <span ng-if="prof.matieresId.includes(matiere._id)" class="glyphicon glyphicon-ok check-mark"></span> 
+                                                            </a>
+												</li>
+											</ol>
+										</div>
+										<!--buttons de  confirmation / annulation de la modification -->
+										<div class="col-xs-6 col-xs-push-3">
+											<hr>
+											<button type="button" class="btn btn-success" ng-click="mainApp.settingsPanel.prof.submitEdite(prof)" ng-disabled="changeProfForm.$invalide">
+                                                <i class="fa fa-check-square-o" aria-hidden="true"></i>
+                                            </button>
+											<button type="button" class="btn btn-warning" ng-click="mainApp.settingsPanel.prof.cancelEdite(prof)">
+                                                <i class="fa fa-times-circle-o" aria-hidden="true"></i>
+                                            </button>
+										</div>
+									</form>
+									<!--FIN modification d'un prof -->
+
+								</div>
+							</div>
+						</li>
+						<!--Fin iteration sur les profs -->
+
+					</ul>
+				</div>
+			</div>
+		</div>
+		<!-- fin Prof panel -->
+
+		<!-- etudiant panel -->
+		<div class="panel panel-default clearfix" ng-if="mainApp.currentProf.mask == '010'">
+			<div class="panel-heading">
+				<form>
+					<div class="input-group">
+						<span class="input-group-addon" data-toggle="collapse" data-parent="#setting-body" href="#setting-body-panel4">
+                                    <a>Etudiants</a>
+                                </span>
+						<input type="text" class="form-control" ng-model="mainApp.settingsPanel.etudiant.searchQuery" placeholder="Rechercer un etudiant ...">
+					</div>
+				</form>
+			</div>
+			<div id="setting-body-panel4" class="panel-collapse collapse">
+				<div class="panel-body">
+					<ul class="list-group">
+
+						<!-- ajouter un etudiant -->
+						<li class="list-group-item">
+							<div class="row">
+								<div class="col-xs-12" ng-if="mainApp.settingsPanel.etudiant.mode == 'add'">
+									<form name="addEtudiantForm">
+										<div class="form-group" ng-class="{'has-error' : addEtudiantForm.nom.$invalid && !addEtudiantForm.nom.$pristine}">
+											<label for="addEtudiantNom">Nom : </label>
+											<input type="text" id="addEtudiantNom" name="nom" class="form-control" ng-model="mainApp.settingsPanel.etudiant.nom" placeholder="Nom"
+												required>
+											<div ng-show="!addEtudiantForm.nom.$pristine">
+												<p ng-show="addEtudiantForm.nom.$error.required" class="help-block">nom obligatoir.</p>
+											</div>
+										</div>
+										<div class="form-group" ng-class="{'has-error' : addEtudiantForm.prenom.$invalid && !addEtudiantForm.prenom.$pristine}">
+											<label for="addEtudiantPrenom">Prenom : </label>
+											<input type="text" id="addEtudiantPrenom" name="prenom" class="form-control" ng-model="mainApp.settingsPanel.etudiant.prenom"
+												placeholder="Prenom" required>
+											<div ng-show="!addEtudiantForm.prenom.$pristine">
+												<p ng-show="addEtudiantForm.prenom.$error.required" class="help-block">prenom obligatoir.</p>
+											</div>
+										</div>
+										<div class="form-group" ng-class="{'has-error' : addEtudiantForm.cin.$invalid && !addEtudiantForm.cin.$pristine}">
+											<label for="addEtudiantcin">cin : </label>
+											<input type="text" id="addEtudiantcin" name="cin" class="form-control" ng-model="mainApp.settingsPanel.etudiant.cin" placeholder="cin"
+												ng-minlength="5" ng-maxlength="10" required>
+											<div ng-show="!addEtudiantForm.cin.$pristine">
+												<p ng-show="addEtudiantForm.cin.$error.required" class="help-block">cin obligatoir.</p>
+												<p ng-show="addEtudiantForm.cin.$error.minlength" class="help-block">cin invalide.</p>
+												<p ng-show="addEtudiantForm.cin.$error.maxlength" class="help-block">cin invalide.</p>
+											</div>
+										</div>
+										<div class="form-group" ng-class="{'has-error' : addEtudiantForm.cne.$invalid && !addEtudiantForm.cne.$pristine}">
+											<label for="addEtudiantcne">cne : </label>
+											<input type="text" id="addEtudiantcne" name="cne" class="form-control" ng-model="mainApp.settingsPanel.etudiant.cne" placeholder="cne"
+												ng-minlength="5" ng-maxlength="10" required>
+											<div ng-show="!addEtudiantForm.cne.$pristine">
+												<p ng-show="addEtudiantForm.cne.$error.minlength" class="help-block">cne obligatoir.</p>
+												<p ng-show="addEtudiantForm.cne.$error.maxlength" class="help-block">cne invalide.</p>
+											</div>
+										</div>
+										<div class="form-group">
+											<label for="addEtudiantFormation">Formation :</label>
+											<ol id="addEtudiantFormation" class="nya-bs-select col-xs-12" title="..." ng-model="mainApp.settingsPanel.etudiant.formationId"
+												data-size="6">
+												<li>
+													<input type="text" class="form-control" ng-model="mainApp.searchInput" ng-init="mainApp.searchInput = ''" />
+												</li>
+												<li nya-bs-option="formation in mainApp.formations | filter:mainApp.searchInput" data-value="formation._id">
+													<a>
+                                                                {{formation.intitulee}}
+                                                                <span ng-if="etudiant.formationId==formation._id" class="glyphicon glyphicon-ok check-mark"></span> 
+                                                            </a>
+												</li>
+											</ol>
+										</div>
+										<!--buttons de  confirmation / annulation de l'ajout -->
+										<div class="col-xs-6 col-xs-push-3">
+											<hr>
+											<button type="button" class="btn btn-success" ng-click="mainApp.settingsPanel.etudiant.submitAdd()" ng-disabled="addEtudiantForm.$invalid">
+                                                <i class="fa fa-check-square-o" aria-hidden="true"></i>
+                                            </button>
+											<button type="button" class="btn btn-warning" ng-click="mainApp.settingsPanel.etudiant.cancelAdd()">
+                                                <i class="fa fa-times-circle-o" aria-hidden="true"></i>
+                                            </button>
+										</div>
+									</form>
+								</div>
+								<!--buttons d'afficahge du formulaire' d'ajout -->
+								<div class="col-xs-6 col-xs-push-3" role="toolbar" ng-if="mainApp.settingsPanel.etudiant.mode != 'add'">
+									<div id="uploadEtudiantsContainer"></div>
+									<div class="btn-group" role="group">
+										<button type="button" class="btn btn-info" ng-click="mainApp.settingsPanel.etudiant.add()">
+                                            <i class="fa fa-plus-square-o" aria-hidden="true"></i>
+                                        </button>
+									</div>
+									<div class="btn-group" role="group">
+										<button type="button" class="btn btn-primary" ng-click="mainApp.settingsPanel.etudiant.addFromCSV()">
+                                            <i class="fa fa-list-alt" aria-hidden="true"></i>
+                                        </button>
+									</div>
+								</div>
+							</div>
+						</li>
+						<!--Fin ajouter un etudiant -->
+
+						<!-- iteration sur les etudiants -->
+						<li class="list-group-item" ng-repeat="etudiant in mainApp.etudiants | filter : mainApp.settingsPanel.etudiant.searchQuery">
+							<div class="row">
+								<div class="col-xs-12">
+
+									<!-- affichage des etudiants -->
+									<div ng-if="mainApp.settingsPanel.etudiant.mode != etudiant._id">
+										<div>
+											{{etudiant.nom | uppercase}} {{etudiant.prenom}}
+											</br>
+											<small class="text-muted">cin : {{etudiant.cin}}</small>
+											</br>
+											<small class="text-muted">cne : {{etudiant.cne}}</small>
+											</br>
+											<small class="text-muted">Formation : {{etudiant.formation.intitulee}}</small>
+										</div>
+										<!-- buttons de modification/suppression d'un etudiant' -->
+										<div class="col-xs-6 col-xs-push-3">
+											<hr>
+											<button type="button" class="btn btn-primary" ng-click="mainApp.settingsPanel.etudiant.edite(etudiant)">
+                                                <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                            </button>
+											<button type="button" class="btn btn-danger" ng-click="mainApp.settingsPanel.etudiant.delete(etudiant._id)">
+                                                <i class="fa fa-trash-o" aria-hidden="true"></i>
+                                            </button>
+										</div>
+									</div>
+									<!-- Fin affichage des etudiants -->
+
+									<!-- modification d'un etudiant -->
+									<form name="changeEtudiantForm" ng-if="mainApp.settingsPanel.etudiant.mode == etudiant._id" novalidate>
+										<div class="form-group" ng-class="{ 'has-error' : changeEtudiantForm.nom.$invalid && !changeEtudiantForm.nom.$pristine}">
+											<label for="changeetudiantNom">Nom : </label>
+											<input type="text" id="changeEtudiantNom" name="nom" class="form-control" ng-model="etudiant.nom" placeholder="Nom" required>
+											<div ng-show="!changeEtudiantForm.nom.$pristine">
+												<p ng-show="changeEtudiantForm.nom.$error.required" class="help-block">nom obligatoir.</p>
+											</div>
+										</div>
+										<div class="form-group" ng-class="{ 'has-error' : changeEtudiantForm.prenom.$invalid && !changeEtudiantForm.prenom.$pristine}">
+											<label for="changeEtudiantPrenom">Prenom : </label>
+											<input type="text" id="changeEtudiantPrenom" name="prenom" class="form-control" ng-model="etudiant.prenom" placeholder="Prenom"
+												required>
+											<div ng-show="!changeEtudiantForm.prenom.$pristine">
+												<p ng-show="changeEtudiantForm.prenom.$error.required" class="help-block">prenom obligatoir.</p>
+											</div>
+										</div>
+										<div class="form-group" ng-class="{ 'has-error' : changeEtudiantForm.cin.$invalid && !changeEtudiantForm.cin.$pristine}">
+											<label for="changeEtudiantcin">cin : </label>
+											<input type="text" id="changeEtudiantcin" name="cin" class="form-control" ng-model="etudiant.cin" placeholder="cin" ng-minlength="5"
+												ng-maxlength="10" required>
+											<div ng-show="!changeEtudiantForm.cin.$pristine">
+												<p ng-show="changeEtudiantForm.cin.$error.required" class="help-block">cin obligatoir.</p>
+												<p ng-show="changeEtudiantForm.cin.$error.minlength" class="help-block">cin Invalid.</p>
+												<p ng-show="changeEtudiantForm.cin.$error.maxlength" class="help-block">cin Invalid.</p>
+											</div>
+										</div>
+										<div class="form-group" ng-class="{ 'has-error' : changeEtudiantForm.cne.$invalid && !changeEtudiantForm.cne.$pristine}">
+											<label for="changeEtudiantcne">cne : </label>
+											<input type="text" id="changeEtudiantcne" name="cne" class="form-control" ng-model="etudiant.cne" placeholder="cne" ng-minlength="5"
+												ng-maxlength="10" required>
+											<div ng-show="!changeEtudiantForm.cne.$pristine">
+												<p ng-show="changeEtudiantForm.cne.$error.required" class="help-block">cne obligatoir.</p>
+												<p ng-show="changeEtudiantForm.cin.$error.minlength" class="help-block">cne Invalid.</p>
+												<p ng-show="changeEtudiantForm.cin.$error.maxlength" class="help-block">cne Invalid.</p>
+											</div>
+										</div>
+										<div class="form-group">
+											<label for="changeEtudiantFormation">Formation :</label>
+											<ol id="changeEtudiantFormation" class="nya-bs-select col-xs-12" title="..." ng-model="etudiant.formationId" data-size="6">
+												<li>
+													<input type="text" class="form-control" ng-model="mainApp.searchInput" ng-init="mainApp.searchInput = ''" />
+												</li>
+												<li nya-bs-option="formation in mainApp.formations | filter:mainApp.searchInput" data-value="formation._id">
+													<a>
+                                                                {{formation.intitulee}}
+                                                                <span ng-if="etudiant.formationId==formation._id" class="glyphicon glyphicon-ok check-mark"></span> 
+                                                            </a>
+												</li>
+											</ol>
+										</div>
+										<!--buttons de  confirmation / annulation de la modification -->
+										<div class=" col-xs-6 col-xs-push-3">
+											<hr>
+											<button type="button" class="btn btn-success" ng-click="mainApp.settingsPanel.etudiant.submitEdite(etudiant)" ng-disabled="changeEtudiantForm.$invalid">
+                                                <i class="fa fa-check-square-o" aria-hidden="true"></i>
+                                            </button>
+											<button type="button" class="btn btn-warning" ng-click="mainApp.settingsPanel.etudiant.cancelEdite(etudiant)">
+                                                <i class="fa fa-times-circle-o" aria-hidden="true"></i>
+                                            </button>
+										</div>
+									</form>
+									<!-- Fin modification d'un etudiant -->
+
+								</div>
+							</div>
+						</li>
+						<!--Fin iteration sur les etudiants -->
+					</ul>
+				</div>
+			</div>
+		</div>
+		<!-- fin etudiant panel -->
+	</div>
+
+	<hr>
+
+	<div id="private-area">
+		<div ng-repeat="(id,formation) in mainApp.currentProf.matieres">
+			<div class="panel-group">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h4 class="panel-title">
+							<a data-toggle="collapse" href="#formationCollapse{{$index}}">
+                            {{mainApp.currentProf.formations[id]}}
+                        </a>
+						</h4>
+					</div>
+					<div id="formationCollapse{{$index}}" class="panel-collapse collapse in">
+						<div class="panel-body">
+							<div ng-repeat="(semestre,matieres) in formation">
+								<div>
+									<h3>{{semestre}}</h3>
+									<div class="well well-sm" ng-repeat="(id,matiere) in matieres  track by $index">
+										<a href="#{{matiere._id}}" data-toggle="collapse">{{matiere.intitulee}}</a>
+										<div id="{{matiere._id}}" class="collapse">
+
+											<!-- ajouter une liste des notes -->
+											<li class="list-group-item">
+												<div class="row">
+													<!--buttons d'afficahge du formulaire' d'ajout -->
+													<div class="col-xs-6 col-xs-push-3" ng-if="mainApp.settingsPanel.note.mode != matiere._id">
+														<div id="uploadNotesContainer"></div>
+														<!--
+														<button type="button" class="btn btn-info" ng-click="mainApp.settingsPanel.note.add(matiere)">
+                                                                <i class="fa fa-pencil" aria-hidden="true"></i>
+                                                        </button>
+														-->
+														<div class="btn-group" role="group">
+															<button type="button" class="btn btn-primary" ng-click="mainApp.settingsPanel.note.addFromCSV(matiere)">
+                                                                    <i class="fa fa-list-alt" aria-hidden="true"></i>
+                                                            </button>
+														</div>
+													</div>
+												</div>
+											</li>
+											<!--fin ajouter une liste des notes -->
+
+											<hr>
+
+											<!-- iteration sur les Notes -->
+											<div class="table-responsive">
+												<table class="table table-striped">
+													<thead>
+														<tr>
+															<th>CNE</th>
+															<th>Nom</th>
+															<th>Note&nbsp&nbsp&nbsp&nbsp</th>
+															<th>Valider</th>
+														</tr>
+													</thead>
+													<tbody>
+														<tr ng-repeat="note in mainApp.notes | filterNotes:'*':matiere._id |orderBy : note.etudiant.nom">
+															<td>{{note.etudiant.cne}}</td>
+															<td>{{note.etudiant.nom}} {{note.etudiant.prenom}}</td>
+															<td ng-click="mainApp.settingsPanel.note.edite(note)">
+																<div ng-show="mainApp.settingsPanel.note.note._id != note._id">
+																	{{note.valeur}}
+																</div>
+																<form name="editeNoteForm">
+																	<div class="form-group" ng-class="{'has-error' : editeNoteForm.valeur.$invalid && !editeNoteForm.valeur.$pristine || mainApp.settingsPanel.note.valeur>20}"
+																		ng-show="mainApp.settingsPanel.note.note._id == note._id">
+																		<input type="text" name="valeur" class="form-control" ng-model="mainApp.settingsPanel.note.valeur" ng-pattern="/^\d{0,9}(\.\d{1,9})?$/">
+																	</div>
+																</form>
+															</td>
+															<td>{{note.valeur=='-'?'-':note.valeur>=10?'V':'NV'}}</td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+											<!-- Fin iteration sur les Notes-->
+											<!--buttons de  confirmation / annulation de la modification -->
+											<div class="editeNote" ng-if="mainApp.settingsPanel.note.mode == 'editeNote'">
+												<div class="col-xs-6 col-xs-push-3 form-group editeNoteButtonConfirm">
+													<button type="button" class="btn btn-success" ng-disabled="!mainApp.settingsPanel.note.valide(mainApp.settingsPanel.note.valeur)"
+														ng-click="mainApp.settingsPanel.note.submitEdite(note)">
+                                                         <i class="fa fa-check-square-o" aria-hidden="true"></i>
+                                                    </button>
+													<button type="button" class="btn btn-warning" ng-click="mainApp.settingsPanel.note.cancelEdite(matiere)">
+                                                         <i class="fa fa-times-circle-o" aria-hidden="true"></i>
+                                                    </button>
+												</div>
+											</div>
+										</div>
+									</div>
+									<hr>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+
+<!-- 
+    sideBarPanel = {
+        _show : boolean,
+        toggle : function, 
+        show : function,
+        hide : function,
+        logOutTrigger : function,
+    }
+-->
+
+<div id="side-bar-panel" ng-if="mainApp.sideBarPanel._show">
+	<nav class="navbar navbar-inverse" id="sidebar-wrapper" role="navigation">
+		<ul class="nav sidebar-nav">
+			<li class="sidebar-brand">
+				<a>
+					<h5>MELLO</h5>
+				</a>
+			</li>
+			<li>
+				<a class="sideBarItem" ng-click="mainApp.sideBarPanel.settingsTrigger()">Settings &nbsp <i class="fa fa-cogs" aria-hidden="true"></i></a>
+			</li>
+			<li>
+				<a class="sideBarItem" ng-click="mainApp.sideBarPanel.logOutTrigger()">Logout &nbsp <i class="fa fa-sign-out" aria-hidden="true"></i></a>
+			</li>
+		</ul>
+	</nav>
+</div>
+
+
+<!--
+    etudiantsInfoPanel = {
+        _show : boolean,
+        search : {
+            value : String
+        }
+        show : function,
+        hide : function,
+    }
+-->
+
+<div id="etudians-info-panel" ng-if="mainApp.etudiantsInfoPanel._show">
+	<div class="panel panel-default">
+		<div class="panel-heading clearfix">
+			<div class="input-group col-xs-8">
+				<div class="input-group-btn">
+					<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                        <span class="fa fa-sort"></span>
+                    </button>
+					<ul class="dropdown-menu" role="menu">
+						<li>
+							<a href="#" ng-click="">Licence 1</a>
+							<a href="#" ng-click="">Licence 2</a>
+							<a href="#" ng-click="">Master 1</a>
+							<a href="#" ng-click="">Master 2</a>
+						</li>
+					</ul>
+				</div>
+				<input type="text" class="form-control" placeholder="Recherche..." ng-model="mainApp.etudiantsInfoPanel.search.value">
+			</div>
+		</div>
+		<div class="panel-body">
+			<ul class="list-group">
+				<li class="list-group-item">
+					<div class="panel panel-default" ng-repeat="etudiant in mainApp.etudiants |  filter : mainApp.etudiantsInfoPanel.search.value">
+						<div class="panel-heading clearfix">
+							<div>
+								<h3>{{etudiant.nom | uppercase}} {{etudiant.prenom}}</h3>
+							</div>
+						</div>
+						<div class="panel-body">
+							<p class="list-group-item-text">
+								cne : {{etudiant.cne}}
+								</br>
+								cin : {{etudiant.cin}}
+								</br>
+								Filiere : {{etudiant.filiere}}
+								</br>
+								niveau : {{etudiant.semestre}}
+								</br>
+							</p>
+							<hr>
+							<div>
+								<div class="container">
+									<div class="panel-group" id="accordion{{$index}}">
+										<div class="panel panel-info">
+											<div class="panel-heading">
+												<h4 class="panel-title">
+													<a data-toggle="collapse" data-parent="#accordion{{$index}}" href="#collapse{{$index}}1">Parcoure scolaire</a>
+												</h4>
+											</div>
+											<div id="collapse{{$index}}1" class="panel-collapse collapse">
+												<div class="panel-body" style="text-align : left">
+													<div ng-repeat="anneeScolaire in etudiant.parcoursScolaire">
+														<dl class="row" style="margin : 5px;">
+															<dt>{{anneeScolaire.annee}} : </dt>
+															<p>
+																<dd>&nbsp formation : {{anneeScolaire.formation}}</dd>
+																<dd>&nbsp établissement : {{anneeScolaire.etablissement}}</dd>
+																<dd>&nbsp Note : {{anneeScolaire.note}}</dd>
+															</p>
+														</dl>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="panel panel-info">
+											<div class="panel-heading">
+												<h4 class="panel-title">
+													<a data-toggle="collapse" data-parent="#accordion{{$index}}" href="#collapse{{$index}}2">
+                                                    Formation actuelle
+                                                    </br>
+                                                    {{etudiant.formationActuelle.intitulee}}
+                                                </a>
+												</h4>
+											</div>
+											<div id="collapse{{$index}}2" class="panel-collapse collapse">
+												<div class="panel-body">
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="panel-footer clearfix">
+						</div>
+					</div>
+				</li>
+			</ul>
+		</div>
+		<div class="panel-footer">
+		</div>
+	</div>
+</div>
+
+
+<!-- 
+	editeInfoPanel =  {
+		_show : boolen,
+		show : function,
+		hide : function
+	}
+-->
+
+<div id="edite-info-panel" ng-if="mainApp.editeInfoPanel._show">
+	<div id="updateInfoForm">
+		<form name="userForm" novalidate>
+
+			<div class="form-group" ng-class="{ 'has-error': userForm.email.$touched && (userForm.email.$invalid||mainApp.editeInfoPanel.emailTaken) }">
+				<div class="input-group">
+					<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+					<input type="email" class="form-control" name="email" value="" placeholder="email" ng-model='mainApp.editeInfoPanel.email'
+						required>
+				</div>
+				<div class="help-block" ng-messages="userForm.email.$error" ng-if="userForm.email.$touched">
+					<p ng-if="userForm.email.$error.email">email invalid</p>
+					<p ng-if="mainApp.editeInfoPanel.emailTaken">email existe deja.</p>
+				</div>
+			</div>
+
+
+			<div class="form-group" ng-class="{ 'has-error': userForm.password.$touched && userForm.password.$invalid}">
+				<div class="input-group">
+					<span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+					<input type="password" class="form-control" name="password" placeholder="Mot de passe" ng-model="mainApp.editeInfoPanel.password"
+						required>
+				</div>
+			</div>
+
+			<div class="help-block" ng-if="mainApp.editeInfoPanel.error">
+				Erreur !
+			</div>
+
+			<div class="form-group">
+				<div class="col-xs-12">
+					<a id="btn-login" href="#" class="btn" ng-class="{disabled : userForm.$invalid,'btn-success' : userForm.$valid,'btn-danger' : userForm.$invalid}"
+						ng-click="mainApp.editeInfoPanel.submit()">Login  </a>
+					<a id="btn-login" href="#" class="btn btn-warning" ng-click="mainApp.editeInfoPanel.hide()">Annuler  </a>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>

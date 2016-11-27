@@ -1,0 +1,9 @@
+nom : String
+prenom : String
+numero : String
+email : String
+grade : String /universitaire , vacataire .....
+mask : String
+matieresId : [
+    @id
+]

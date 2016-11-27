@@ -1,0 +1,7 @@
+valeur : String,
+etudiantId : @id
+matiereId: @id
+formationId : @id
+semestre: String //S1,S2...
+profId : @id
+annee : String
