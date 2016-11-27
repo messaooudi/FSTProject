@@ -538,16 +538,18 @@
 										</div>
 										<div class="form-group">
 											<label for="addProfMatieres">Matieres enseigné :</label>
-											<ol class="nya-bs-select col-xs-12" title="..." ng-model="mainApp.settingsPanel.prof.matieresId" data-selected-text-format="count>3"
-												data-size="4" multiple>
+											<ol class="nya-bs-select col-xs-12" title="..." ng-model="mainApp.settingsPanel.prof.matieresId" data-selected-text-format="count>4"
+												data-size="9" multiple>
+												<!--
 												<li>
 													<input type="text" class="form-control" ng-model="mainApp.searchInput" ng-init="mainApp.searchInput = ''" />
 												</li>
+												-->
 												<li nya-bs-option="matiere in mainApp.matieres | filter:mainApp.searchInput" data-value="matiere._id">
 													<a>
                                                                 {{matiere.intitulee}}
                                                                 <span ng-if="mainApp.settingsPanel.prof.matieresId.includes(matiere._id)" class="glyphicon glyphicon-ok check-mark"></span> 
-                                                            </a>
+                                                    </a>
 												</li>
 											</ol>
 										</div>
@@ -656,11 +658,13 @@
 										</div>
 										<div class="form-group">
 											<label for="changeProfGrade">Matieres enseigné :</label>
-											<ol id="changeProfGrade" class="nya-bs-select col-xs-12" title="..." ng-model="prof.matieresId" data-selected-text-format="count>3"
-												data-size="4" multiple>
+											<ol id="changeProfGrade" class="nya-bs-select col-xs-12" title="..." ng-model="prof.matieresId" data-selected-text-format="count>4"
+												data-size="8" multiple>
+												<!--
 												<li>
 													<input type="text" class="form-control" ng-model="mainApp.searchInput" ng-init="mainApp.searchInput = ''" />
 												</li>
+												-->
 												<li nya-bs-option="matiere in mainApp.matieres | filter:mainApp.searchInput" data-value="matiere._id">
 													<a>
                                                                 {{matiere.intitulee}}
@@ -752,10 +756,12 @@
 										<div class="form-group">
 											<label for="addEtudiantFormation">Formation :</label>
 											<ol id="addEtudiantFormation" class="nya-bs-select col-xs-12" title="..." ng-model="mainApp.settingsPanel.etudiant.formationId"
-												data-size="6">
+												data-size="8">
+												<!--
 												<li>
 													<input type="text" class="form-control" ng-model="mainApp.searchInput" ng-init="mainApp.searchInput = ''" />
 												</li>
+												-->
 												<li nya-bs-option="formation in mainApp.formations | filter:mainApp.searchInput" data-value="formation._id">
 													<a>
                                                                 {{formation.intitulee}}
@@ -863,10 +869,12 @@
 										</div>
 										<div class="form-group">
 											<label for="changeEtudiantFormation">Formation :</label>
-											<ol id="changeEtudiantFormation" class="nya-bs-select col-xs-12" title="..." ng-model="etudiant.formationId" data-size="6">
+											<ol id="changeEtudiantFormation" class="nya-bs-select col-xs-12" title="..." ng-model="etudiant.formationId" data-size="8">
+												<!--
 												<li>
 													<input type="text" class="form-control" ng-model="mainApp.searchInput" ng-init="mainApp.searchInput = ''" />
 												</li>
+												-->
 												<li nya-bs-option="formation in mainApp.formations | filter:mainApp.searchInput" data-value="formation._id">
 													<a>
                                                                 {{formation.intitulee}}

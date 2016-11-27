@@ -63,26 +63,6 @@ class Settings {
             })
         }
 
-        vm.createUser = function () {
-            Accounts.createUser({
-                email: vm.singUp.userName,
-                password: vm.singUp.password,
-                profile: {
-                    firstName: vm.singUp.firstName,
-                    lastName: vm.singUp.lastName,
-                }
-            }, function (err) {
-                if (err) {
-                    if (err.reason == "Email already exists.") {
-                        vm.emailTaken = true;
-                        $timeout(function () {
-                            vm.emailTaken = false;
-                        }, 4000)
-                    }
-                }
-            });
-        }
-
         vm.connectionToast = {
             _show: false,
             setShow: function (val) {
