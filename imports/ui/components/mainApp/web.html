@@ -428,6 +428,20 @@
 											<small class="text-muted">{{matiere.formation.intitulee}}</small>
 											</br>
 											<small class="text-muted">{{matiere.semestre}}</small>
+											<div class="well well-sm">
+												<a href="#admin{{matiere._id}}" data-toggle="collapse">NOTES</a>
+												<div id="admin{{matiere._id}}" class="collapse">
+													<hr>
+													<div>
+														<div class="row" ng-repeat="note in mainApp.notes | filterNotes :'*' :matiere._id">
+															<p class="col-xs-2">{{note.etudiant.cne}}</p>
+															<p class="col-xs-6"><strong>{{note.etudiant.nom}} {{note.etudiant.prenom}}</strong></p>
+															<p class="col-xs-2">{{note.valeur}}</p>
+															<p class="col-xs-2">{{note.valeur == '-'?'-':note.valeur>=10?'V':'NV'}}</p>
+														</div>
+													</div>
+												</div>
+											</div>
 										</div>
 										<!-- buttons de modification/suppression d'un prof' -->
 										<div class="col-xs-6 col-xs-push-3" ng-if="mainApp.currentProf.mask == '010'">
@@ -1027,11 +1041,11 @@
 		<ul class="nav sidebar-nav">
 			<li class="sidebar-brand">
 				<a>
-					<h5>MELLO</h5>
+					<h5>{{mainApp.currentProf.nom}} {{mainApp.currentProf.prenom}}</h5>
 				</a>
 			</li>
 			<li>
-				<a class="sideBarItem" ng-click="mainApp.sideBarPanel.settingsTrigger()">Settings &nbsp <i class="fa fa-cogs" aria-hidden="true"></i></a>
+				<a class="sideBarItem" ng-click="mainApp.sideBarPanel.settingsTrigger()">Profile &nbsp <i class="fa fa-cogs" aria-hidden="true"></i></a>
 			</li>
 			<li>
 				<a class="sideBarItem" ng-click="mainApp.sideBarPanel.logOutTrigger()">Logout &nbsp <i class="fa fa-sign-out" aria-hidden="true"></i></a>
@@ -1188,7 +1202,7 @@
 			<div class="form-group">
 				<div class="col-xs-12">
 					<a id="btn-login" href="#" class="btn" ng-class="{disabled : userForm.$invalid,'btn-success' : userForm.$valid,'btn-danger' : userForm.$invalid}"
-						ng-click="mainApp.editeInfoPanel.submit()">Login  </a>
+						ng-click="mainApp.editeInfoPanel.submit()">Modifier  </a>
 					<a id="btn-login" href="#" class="btn btn-warning" ng-click="mainApp.editeInfoPanel.hide()">Annuler  </a>
 				</div>
 			</div>

@@ -23,6 +23,7 @@ if (Meteor.isServer) {
     });
 }
 
+
 Etudiants.allow({
     insert(userId, etudiant) {
         return true;

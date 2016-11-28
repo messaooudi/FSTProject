@@ -1,6 +1,6 @@
 App.info({
-  id: 'com.goStation',
-  name: 'Go Station',
+  id: 'com.melloApp',
+  name: 'melloApp',
   description: '',
   author: 'MESSAOUDI Oussama',
   email: 'messaoudi.oussama.in@gmail.com',

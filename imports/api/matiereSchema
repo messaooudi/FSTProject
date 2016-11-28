@@ -1,3 +1,4 @@
 intitulee : String
 formationId : @id
 semestre : String//s1,s2...
+profId : @id

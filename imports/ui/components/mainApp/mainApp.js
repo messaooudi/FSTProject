@@ -769,20 +769,7 @@ class Settings {
                                                         if (err) {
                                                             console.log(JSON.stringify("error insertion " + err))
                                                         } else {
-                                                            Accounts.createUser({
-                                                                email: profs[i].nom + "_" + profs[i].prenom + "@gmail.com",
-                                                                password: profs[i].nom + "_" + profs[i].prenom,
-                                                                profile: {
-                                                                    firstName: profs[i].nom,
-                                                                    lastName: profs[i].prenom,
-                                                                    _id: id
-                                                                }
-                                                            }, (err) => {
-                                                                if (err) {
-                                                                    console.log(JSON.stringify(err));
-                                                                }
-                                                                vm.settingsPanel.prof.reset();
-                                                            });
+                                                            Meteor.call('createUserProf',profs[i],id);
                                                         }
                                                     })
                                                 } catch (err) {
@@ -877,6 +864,7 @@ class Settings {
                         if (this.nom != prof.nom && this.prenom != prof.prenom && Profs.find({ $and: [{ nom: prof.nom }, { prenom: prof.prenom }] }).count()) {
                             throw `<span>le prof ${this.nom} ${this.prenom} existe deja!</span>`;
                         }
+
                         Profs.update({ _id: prof._id }, {
                             $set: {
                                 nom: prof.nom,
@@ -891,6 +879,7 @@ class Settings {
                                 notify({ message: 'Prof Modifier avec success', position: 'right', duration: 4000, classes: 'alert-success' });
                             }
                         })
+
                         this.reset();
                         this.mode = false;
 

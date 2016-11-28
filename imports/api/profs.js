@@ -26,6 +26,7 @@ export const Profs = new Mongo.Collection('profs', {
                                 prof.matieres[matiere.formation._id] = {}
                             if (prof.matieres[matiere.formation._id][matiere.semestre] == undefined)
                                 prof.matieres[matiere.formation._id][matiere.semestre] = [];
+                            
                             prof.matieres[matiere.formation._id][matiere.semestre].push(matiere);
                         })
                 })
