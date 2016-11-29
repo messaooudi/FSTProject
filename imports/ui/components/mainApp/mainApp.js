@@ -189,15 +189,10 @@ class Settings {
         vm.helpers({
             currentProf() {
                 var current = Profs.find({ _id: Meteor.user().profile._id }).fetch()[0] || {};//vm.getReactively('profs')[0] || {};
-
-                $timeout(() => {
-                    $scope.$apply(function () {
-                    });
-                }, 100);
-
                 return current;
             }
         })
+
 
         //etudiants
         vm.helpers({
@@ -769,7 +764,7 @@ class Settings {
                                                         if (err) {
                                                             console.log(JSON.stringify("error insertion " + err))
                                                         } else {
-                                                            Meteor.call('createUserProf',profs[i],id);
+                                                            Meteor.call('createUserProf', profs[i], id);
                                                         }
                                                     })
                                                 } catch (err) {
@@ -824,20 +819,8 @@ class Settings {
                             if (err) {
                                 notify({ message: 'une erreur est survenue!', position: 'left', duration: 4000, classes: 'alert-danger' });
                             } else {
-                                Accounts.createUser({
-                                    email: this.nom + "_" + this.prenom + "@gmail.com",
-                                    password: this.nom + "_" + this.prenom,
-                                    profile: {
-                                        firstName: this.nom,
-                                        lastName: this.prenom,
-                                        _id: id
-                                    }
-                                }, (err) => {
-                                    if (err) {
-                                        console.log(JSON.stringify(err));
-                                    }
-                                    this.reset();
-                                });
+                                
+                                Meteor.call('createUserProf', {nom : this.nom,prenom:this.prenom}, id);
                                 notify({ message: 'Prof Ajouer avec success', position: 'right', duration: 4000, classes: 'alert-success' });
                             }
                         })
