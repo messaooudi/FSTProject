@@ -7,7 +7,7 @@ import { Meteor } from 'meteor/meteor';
 
 
 
-import mobileTemplate from './mobile.html';
+import mobileTemplate from './web.html';
 import webTemplate from './web.html';
 import './login.css';
 
