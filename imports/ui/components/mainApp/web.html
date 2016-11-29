@@ -91,10 +91,10 @@
 									<a href="#{{etudiant._id}}" data-toggle="collapse">NOTES</a>
 									<div id="{{etudiant._id}}" class="collapse">
 										<hr>
-										<div>
+										<div style="text-align: center">
 											<div class="row" ng-repeat="note in mainApp.notes | filterNotes : etudiant._id">
-												<p class="col-xs-2">{{note.matiere.semestre}}</p>
-												<p class="col-xs-6"><strong>{{note.matiere.intitulee}}</strong></p>
+												<p class="col-xs-3">{{note.matiere.semestre}}</p>
+												<p class="col-xs-5"><strong>{{note.matiere.intitulee}}</strong></p>
 												<p class="col-xs-2">{{note.valeur}}</p>
 												<p class="col-xs-2">{{note.valeur == '-'?'-':note.valeur>=10?'V':'NV'}}</p>
 											</div>
@@ -432,10 +432,10 @@
 												<a href="#admin{{matiere._id}}" data-toggle="collapse">NOTES</a>
 												<div id="admin{{matiere._id}}" class="collapse">
 													<hr>
-													<div>
+													<div style="text-text-align: center">
 														<div class="row" ng-repeat="note in mainApp.notes | filterNotes :'*' :matiere._id">
-															<p class="col-xs-2">{{note.etudiant.cne}}</p>
-															<p class="col-xs-6"><strong>{{note.etudiant.nom}} {{note.etudiant.prenom}}</strong></p>
+															<p class="col-xs-3">{{note.etudiant.cne}}</p>
+															<p class="col-xs-5"><strong>{{note.etudiant.nom}} {{note.etudiant.prenom}}</strong></p>
 															<p class="col-xs-2">{{note.valeur}}</p>
 															<p class="col-xs-2">{{note.valeur == '-'?'-':note.valeur>=10?'V':'NV'}}</p>
 														</div>
