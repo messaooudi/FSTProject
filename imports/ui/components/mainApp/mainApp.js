@@ -507,11 +507,9 @@ class Settings {
                                                             }),
                                                         })
 
-                                                    try {
-                                                        var WriteResult = Matieres.insert(matieres[i]);
-                                                    } catch (err) {
-                                                        console.log("Could not insert new Matiere : " + err);
-                                                    }
+
+                                                    var WriteResult = Matieres.insert(matieres[i]);
+
                                                     if (WriteResult) {
                                                         if (matieres[i].formationId) {
                                                             var etudiants = Etudiants.find({ formationId: matieres[i].formationId }, { _id: 1 }).fetch()
@@ -573,15 +571,13 @@ class Settings {
                     $('#uploadMatieresCSV').click();
                 },
                 submitAdd: function () {
-                    try {
-                        var WriteResult = Matieres.insert({
-                            intitulee: this.intitulee,
-                            formationId: this.formationId,
-                            semestre: this.semestre
-                        })
-                    } catch (err) {
-                        console.log("Could not insert new Matiere : " + err);
-                    }
+
+                    var WriteResult = Matieres.insert({
+                        intitulee: this.intitulee,
+                        formationId: this.formationId,
+                        semestre: this.semestre
+                    })
+
                     if (WriteResult) {
                         if (this.formationId) {
                             var etudiants = Etudiants.find({ formationId: this.formationId }, { _id: 1 }).fetch();
@@ -594,9 +590,10 @@ class Settings {
                                 })
                             })
                         }
+                        notify({ message: 'Matiere Inserer avec success', position: 'right', duration: 4000, classes: 'alert-success' });
                         this.reset();
                     } else {
-                        console.log("Could not insert new Matiere  ");
+                        notify({ message: 'une erreur est survenue!', position: 'left', duration: 4000, classes: 'alert-danger' });
                         this.reset();
                     }
                     this.mode = false;
@@ -622,21 +619,24 @@ class Settings {
                         }
                     });
 
-                    if (matiere.formationId != this.formationId) {
-                        Meteor.call('removeNotes', { matiereId: matiere._id });
-                        var etudiants = Etudiants.find({ formationId: matiere.formationId }, { _id: 1 }).fetch()
+                    if (WriteResult) {
+                        if (matiere.formationId != this.formationId) {
+                            Meteor.call('removeNotes', { matiereId: matiere._id });
+                            var etudiants = Etudiants.find({ formationId: matiere.formationId }, { _id: 1 }).fetch()
 
-                        etudiants.forEach(function (etudiant) {
-                            Notes.insert({
-                                valeur: '-',
-                                etudiantId: etudiant._id,
-                                matiereId: matiere._id,
-                                semestre: matiere.semestre
+                            etudiants.forEach(function (etudiant) {
+                                Notes.insert({
+                                    valeur: '-',
+                                    etudiantId: etudiant._id,
+                                    matiereId: matiere._id,
+                                    semestre: matiere.semestre
+                                })
                             })
-                        })
+                        }
+                        notify({ message: 'Matiere Modifier avec success', position: 'right', duration: 4000, classes: 'alert-success' });
                         this.reset();
-
                     } else {
+                        notify({ message: 'une erreur est survenue!', position: 'left', duration: 4000, classes: 'alert-danger' });
                         this.reset();
                     }
 
@@ -760,13 +760,13 @@ class Settings {
                                                         })
 
                                                     profs[i].mask = "001";
-                                                    Profs.insert(profs[i], (err, id) => {
-                                                        if (err) {
-                                                            console.log(JSON.stringify("error insertion " + err))
-                                                        } else {
-                                                            Meteor.call('createUserProf', profs[i], id);
-                                                        }
-                                                    })
+                                                    var WriteResult = Profs.insert(profs[i]);
+
+                                                    if (WriteResult) {
+                                                        Meteor.call('createUserProf', { nom: profs[i].nom, prenom: profs[i].prenom }, WriteResult);
+                                                    } else {
+                                                    }
+
                                                 } catch (err) {
                                                     rejectedElement++;
                                                     if (err.type == 'prof existe') {
@@ -809,21 +809,22 @@ class Settings {
                         if (Profs.find({ $and: [{ nom: this.nom }, { prenom: this.prenom }] }).count()) {
                             throw `<span>le prof ${this.nom} ${this.prenom} existe deja!</span>`;
                         }
-                        Profs.insert({
+
+                        var WriteResult = Profs.insert({
                             nom: this.nom,
                             prenom: this.prenom,
                             grade: this.grade,
                             mask: "001",
                             matieresId: this.matieresId
-                        }, (err, id) => {
-                            if (err) {
-                                notify({ message: 'une erreur est survenue!', position: 'left', duration: 4000, classes: 'alert-danger' });
-                            } else {
-                                
-                                Meteor.call('createUserProf', {nom : this.nom,prenom:this.prenom}, id);
-                                notify({ message: 'Prof Ajouer avec success', position: 'right', duration: 4000, classes: 'alert-success' });
-                            }
-                        })
+                        });
+
+                        if (WriteResult) {
+                            Meteor.call('createUserProf', { nom: this.nom, prenom: this.prenom }, WriteResult);
+                            notify({ message: 'Prof Ajouer avec success', position: 'right', duration: 4000, classes: 'alert-success' });
+                        } else {
+                            notify({ message: 'une erreur est survenue!', position: 'left', duration: 4000, classes: 'alert-danger' });
+                        }
+
                         this.mode = false;
 
                     } catch (err) {
@@ -848,20 +849,20 @@ class Settings {
                             throw `<span>le prof ${this.nom} ${this.prenom} existe deja!</span>`;
                         }
 
-                        Profs.update({ _id: prof._id }, {
+                        var WriteResult = Profs.update({ _id: prof._id }, {
                             $set: {
                                 nom: prof.nom,
                                 prenom: prof.prenom,
                                 grade: prof.grade,
                                 matieresId: prof.matieresId
                             }
-                        }, (err, id) => {
-                            if (err) {
-                                notify({ message: 'une erreur est survenue!', position: 'left', duration: 4000, classes: 'alert-danger' });
-                            } else {
-                                notify({ message: 'Prof Modifier avec success', position: 'right', duration: 4000, classes: 'alert-success' });
-                            }
-                        })
+                        });
+
+                        if (WriteResult) {
+                            notify({ message: 'Prof Modifier avec success', position: 'right', duration: 4000, classes: 'alert-success' });
+                        } else {
+                            notify({ message: 'une erreur est survenue!', position: 'left', duration: 4000, classes: 'alert-danger' });
+                        }
 
                         this.reset();
                         this.mode = false;
@@ -1011,23 +1012,20 @@ class Settings {
                                                         formationNotFoundError.message += `<li class='list-group-item'>${etudiants[i].nom} ${etudiants[i].prenom}</li>`;
                                                     }
 
-                                                    Etudiants.insert(etudiants[i], (err, id) => {
-                                                        if (err)
-                                                            console.log(JSON.stringify("error insertion " + err))
-                                                        else {
-                                                            if (etudiants[i]['formationId']) {
-                                                                var matieres = Matieres.find({ formationId: etudiants[i]['formationId'] }).fetch();
-                                                                matieres.forEach(function (matiere) {
-                                                                    Notes.insert({
-                                                                        valeur: '-',
-                                                                        etudiantId: id,
-                                                                        matiereId: matiere._id,
-                                                                        semestre: matiere.semestre
-                                                                    })
-                                                                })
-                                                            }
-                                                        }
-                                                    })
+                                                    var WriteResult = Etudiants.insert(etudiants[i]);
+                                                    if (WriteResult) {
+                                                        var matieres = Matieres.find({ formationId: etudiants[i]['formationId'] }).fetch();
+                                                        matieres.forEach(function (matiere) {
+                                                            Notes.insert({
+                                                                valeur: '-',
+                                                                etudiantId: WriteResult,
+                                                                matiereId: matiere._id,
+                                                                semestre: matiere.semestre
+                                                            })
+                                                        })
+                                                    } else {
+                                                        console.log(JSON.stringify("error insertion " + err))
+                                                    }
                                                 } catch (err) {
                                                     rejectedElement++;
                                                     if (err.type == 'cne existe') {
@@ -1072,29 +1070,30 @@ class Settings {
                         if (Etudiants.find({ cne: this.cne }).count()) {
                             throw `<span>CNE : ${this.cne} existe deja!</span>`;
                         }
-                        Etudiants.insert({
+
+                        var WriteResult = Etudiants.insert({
                             nom: this.nom,
                             prenom: this.prenom,
                             cin: this.cin,
                             cne: this.cne,
                             formationId: this.formationId,
-                        }, (err, id) => {
-                            if (err) {
-                                notify({ message: 'une erreur est survenue!', position: 'left', duration: 4000, classes: 'alert-danger' });
-                            } else {
-                                notify({ message: 'Etudiant insérer avec success', position: 'right', duration: 4000, classes: 'alert-success' });
-                                var matieres = Matieres.find({ formationId: this.formationId }).fetch();
-                                matieres.forEach(function (matiere) {
-                                    Notes.insert({
-                                        valeur: '-',
-                                        etudiantId: id,
-                                        matiereId: matiere._id,
-                                        semestre: matiere.semestre
-                                    })
+                        });
+
+                        if (WriteResult) {
+                            var matieres = Matieres.find({ formationId: this.formationId }).fetch();
+                            matieres.forEach(function (matiere) {
+                                Notes.insert({
+                                    valeur: '-',
+                                    etudiantId: WriteResult,
+                                    matiereId: matiere._id,
+                                    semestre: matiere.semestre
                                 })
-                            }
+                            })
                             this.reset();
-                        })
+                        } else {
+                            notify({ message: 'une erreur est survenue!', position: 'left', duration: 4000, classes: 'alert-danger' });
+                            this.reset();
+                        }
 
                         this.mode = false;
                     } catch (err) {
